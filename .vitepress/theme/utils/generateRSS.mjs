@@ -21,7 +21,7 @@ export const createRssFile = async (config, themeConfig) => {
     language: "zh",
     generator: siteMeta.author.name,
     favicon: siteMeta.author.cover,
-    copyright: `Copyright © 2025-present ${siteMeta.author.name}`,
+    copyright: `Copyright © ${themeConfig.copyrightStartYear}-${new Date().getFullYear()} ${siteMeta.author.name}`,
     updated: new Date(),
   });
   // 加载文章
@@ -29,7 +29,7 @@ export const createRssFile = async (config, themeConfig) => {
     render: true,
   }).load();
   // 日期降序排序
-  posts = posts.sort((a, b) => {
+  posts = posts.filter((post) => !post.frontmatter.hidden).sort((a, b) => {
     const dateA = new Date(a.frontmatter.date);
     const dateB = new Date(b.frontmatter.date);
     return dateB - dateA;

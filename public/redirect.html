@@ -18,6 +18,13 @@
         --main-card-background: #fff;
         --main-font-color: #363636;
       }
+      @font-face {
+        font-family: "MiSans";
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url("/fonts/MiSans-Regular.woff2") format("woff2");
+      }
       @media (prefers-color-scheme: dark) {
         :root {
           --main-site-background: #18171d;
@@ -33,7 +40,7 @@
       body {
         background-color: var(--main-site-background);
         color: var(--main-font-color);
-        font-family: "PingFang SC", "Open Sans", "Microsoft YaHei", sans-serif;
+        font-family: "MiSans", sans-serif;
         display: flex;
         align-items: center;
         justify-content: center;

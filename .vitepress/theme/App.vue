@@ -31,7 +31,7 @@
       <!-- 全局设置 -->
       <Settings />
       <!-- 全局播放器 -->
-      <Player />
+      <Player v-if="theme.music.enable" />
     </div>
   </Teleport>
   <!-- 右键菜单 -->
@@ -48,7 +48,7 @@ import { calculateScroll, specialDayGray } from "@/utils/helper";
 const route = useRoute();
 const store = mainStore();
 const { frontmatter, page, theme } = useData();
-const { loadingStatus, footerIsShow, themeValue, themeType, backgroundType, fontFamily, fontSize } =
+const { loadingStatus, footerIsShow, themeValue, themeType, backgroundType, fontSize } =
   storeToRefs(store);
 
 // 右键菜单
@@ -107,26 +107,10 @@ const changeSiteThemeType = () => {
   }
 };
 
-// 切换系统字体样式
-const changeSiteFont = () => {
-  try {
-    const htmlElement = document.documentElement;
-    htmlElement.classList.remove("lxgw", "hmos");
-    htmlElement.classList.add(fontFamily.value);
-    htmlElement.style.fontSize = fontSize.value + "px";
-  } catch (error) {
-    console.error("切换系统字体样式失败", error);
-  }
-};
-
 // 监听设置变化
 watch(
   () => [themeType.value, backgroundType.value],
   () => changeSiteThemeType(),
-);
-watch(
-  () => fontFamily.value,
-  () => changeSiteFont(),
 );
 
 onMounted(() => {
@@ -135,8 +119,10 @@ onMounted(() => {
   specialDayGray();
   // 更改主题类别
   changeSiteThemeType();
-  // 切换系统字体样式
-  changeSiteFont();
+  // 全站固定使用本地 MiSans，并清理旧版本保存的字体类名。
+  document.documentElement.classList.remove("lxgw", "hmos");
+  document.documentElement.classList.add("misans");
+  document.documentElement.style.fontSize = fontSize.value + "px";
   // 滚动监听
   window.addEventListener("scroll", calculateScroll);
   // 右键监听

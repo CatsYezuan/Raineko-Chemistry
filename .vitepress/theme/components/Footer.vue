@@ -2,7 +2,7 @@
   <footer id="main-footer" class="main-footer">
     <div class="footer-content">
       <div class="copyright">
-        <span class="time">@ 2025 - {{ thisYear }}</span>
+        <span class="time">© {{ theme.copyrightStartYear }} - {{ thisYear }}</span>
         <a :href="theme.siteMeta.author.link" class="author link" target="_blank">
           {{ theme.siteMeta.author.name }}
         </a>
@@ -18,9 +18,9 @@
           <span class="name">VitePress</span>
         </a>
         <a class="theme link" href="https://github.com/imsyy/vitepress-theme-curve" target="_blank">
-          <span class="name">主题</span>
+          <span class="name">主题 Curve</span>
         </a>
-        <a class="rss link" href="https://blog.imsyy.top/rss.xml" target="_blank">
+        <a class="rss link" href="https://chemistry.raineko.net/rss.xml" target="_blank">
           <i class="iconfont icon-rss" />
           <span class="name">订阅</span>
         </a>
@@ -106,12 +106,6 @@ onBeforeUnmount(() => {
         .iconfont {
           font-size: 20px;
           opacity: 0.6;
-        }
-      }
-      .upyun {
-        .iconfont {
-          font-size: 20px;
-          font-weight: normal;
         }
       }
     }

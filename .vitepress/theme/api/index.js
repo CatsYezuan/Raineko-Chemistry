@@ -1,11 +1,18 @@
 /**
- * 获取一言
- * @param {string} [rule="updated"] - 文章的排序规则，可以是 "created" 或 "updated"
+ * 获取首页一言。请求失败时由调用方继续显示站点描述。
  */
 export const getHitokoto = async () => {
-  const result = await fetch("https://v1.hitokoto.cn");
-  const hitokoto = await result.json();
-  return hitokoto;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+  try {
+    const response = await fetch("https://v1.hitokoto.cn/?c=i&c=k&encode=json&max_length=40", {
+      signal: controller.signal,
+    });
+    if (!response.ok) throw new Error(`一言接口返回 ${response.status}`);
+    return await response.json();
+  } finally {
+    clearTimeout(timeout);
+  }
 };
 
 /**
@@ -62,32 +69,4 @@ export const getMusicList = async (url, id, server = "netease", type = "playlist
       cover: pic,
     };
   });
-};
-
-/**
- * 站点统计数据
- */
-export const getStatistics = async (key) => {
-  const result = await fetch(`https://v6-widget.51.la/v6/${key}/quote.js`);
-  const title = [
-    "最近活跃",
-    "今日人数",
-    "今日访问",
-    "昨日人数",
-    "昨日访问",
-    "本月访问",
-    "总访问量",
-  ];
-  const data = await result.text();
-  let num = data.match(/(<\/span><span>).*?(\/span><\/p>)/g);
-  num = num.map((el) => {
-    const val = el.replace(/(<\/span><span>)/g, "");
-    return val.replace(/(<\/span><\/p>)/g, "");
-  });
-  const statistics = {};
-  for (let i = 0; i < num.length; i++) {
-    if (i === num.length - 1) continue;
-    statistics[title[i]] = num[i];
-  }
-  return statistics;
 };

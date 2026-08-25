@@ -3,12 +3,12 @@
     <Banner
       type="page"
       title="我的项目"
-      desc="源于热爱开发优秀的作品"
-      footer="写 BUG 小能手"
-      image="https://pic.efefee.cn/uploads/2024/02/27/65dd8dae6043c.webp"
+      desc="整理化学学习笔记与竞赛资料"
+      footer="持续学习，持续记录"
+      image="/images/logo/logo.webp"
     >
       <template #footer-slot>
-        <a class="to-github" href="https://github.com/imsyy/" target="_blank">
+        <a class="to-github" href="https://github.com/CatsYezuan" target="_blank">
           <i class="iconfont icon-github"></i>
           <span>前往 Github</span>
         </a>

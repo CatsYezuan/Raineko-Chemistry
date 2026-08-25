@@ -16,23 +16,6 @@
       <div class="set-list">
         <span class="title">字体</span>
         <div class="set-item">
-          <span class="set-label">全站字体</span>
-          <div class="set-options">
-            <span
-              :class="['options', { choose: fontFamily === 'hmos' }]"
-              @click="fontFamily = 'hmos'"
-            >
-              HarmonyOS Sans
-            </span>
-            <span
-              :class="['options', { choose: fontFamily === 'lxgw' }]"
-              @click="fontFamily = 'lxgw'"
-            >
-              霞鹜文楷
-            </span>
-          </div>
-        </div>
-        <div class="set-item">
           <span class="set-label">全站字体大小</span>
           <div class="set-options">
             <span class="options" @click="store.changeFontSize(false)"> - </span>
@@ -58,7 +41,7 @@
             </span>
             <span
               :class="['options', { choose: backgroundType === 'image' }]"
-              @click="(backgroundType = 'image'), (themeType = 'dark')"
+              @click="((backgroundType = 'image'), (themeType = 'dark'))"
             >
               图片
             </span>
@@ -122,7 +105,7 @@ import { storeToRefs } from "pinia";
 import { mainStore } from "@/store";
 
 const store = mainStore();
-const { themeType, fontFamily, fontSize, infoPosition, backgroundType, backgroundUrl, bannerType } =
+const { themeType, fontSize, infoPosition, backgroundType, backgroundUrl, bannerType } =
   storeToRefs(store);
 </script>
 

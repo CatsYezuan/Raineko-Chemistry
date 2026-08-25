@@ -41,8 +41,6 @@ export const mainStore = defineStore("main", {
       useRightMenu: true,
       // 背景模糊
       backgroundBlur: false,
-      // 全站字体
-      fontFamily: "hmos",
       // 全站字体大小
       fontSize: 16,
       // 信息显示位置
@@ -121,7 +119,6 @@ export const mainStore = defineStore("main", {
         "playerVolume",
         "backgroundBlur",
         "backgroundType",
-        "fontFamily",
         "fontSize",
         "infoPosition",
         "backgroundUrl",

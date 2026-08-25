@@ -38,16 +38,6 @@
           <i class="iconfont icon-time" />
           {{ formatTimestamp(page?.lastUpdated || postMetaData.lastModified) }}
         </span>
-        <!-- 热度 -->
-        <span class="hot meta">
-          <i class="iconfont icon-fire" />
-          <span id="twikoo_visitors" class="artalk-pv-count">0</span>
-        </span>
-        <!-- 评论数 -->
-        <span class="chat meta hover" @click="commentRef?.scrollToComments">
-          <i class="iconfont icon-chat" />
-          <span id="twikoo_comments" class="artalk-comment-count">0</span>
-        </span>
       </div>
     </div>
     <div class="post-content">
@@ -78,12 +68,13 @@
             </a>
           </div>
           <a
-            href="https://eqnxweimkr5.feishu.cn/share/base/form/shrcnCXCPmxCKKJYI3RKUfefJre"
+            href="https://github.com/CatsYezuan/Raineko-Chemistry/issues/new"
             class="report"
             target="_blank"
+            rel="noopener noreferrer"
           >
             <i class="iconfont icon-report" />
-            反馈与投诉
+            反馈与勘误
           </a>
         </div>
         <RewardBtn />
@@ -91,8 +82,6 @@
         <NextPost />
         <!-- 相关文章 -->
         <RelatedPost />
-        <!-- 评论 -->
-        <Comments ref="commentRef" />
       </article>
       <Aside showToc />
     </div>
@@ -102,12 +91,9 @@
 <script setup>
 import { formatTimestamp } from "@/utils/helper";
 import { generateId } from "@/utils/commonTools";
-import initFancybox from "@/utils/initFancybox";
+import initFancybox from "@/utils/initFancybox.local";
 
 const { page, theme, frontmatter } = useData();
-
-// 评论元素
-const commentRef = ref(null);
 
 // 获取对应文章数据
 const postMetaData = computed(() => {

@@ -24,6 +24,8 @@ themeConfig.mjs
 
 posts/*
 !posts/2024/1010.md
+!posts/2026/
+!posts/2026/*.md
 
 # Editor directories and files
 .vscode/*

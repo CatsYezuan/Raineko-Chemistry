@@ -6,6 +6,7 @@ import {
   getAllType,
   getAllCategories,
   getAllArchives,
+  getSearchIndex,
 } from "./theme/utils/getPostData.mjs";
 import { jumpRedirect } from "./theme/utils/commonTools.mjs";
 import { getThemeConfig } from "./init.mjs";
@@ -46,6 +47,7 @@ export default withPwa(
       tagsData: getAllType(postData),
       categoriesData: getAllCategories(postData),
       archivesData: getAllArchives(postData),
+      searchIndex: await getSearchIndex(),
     },
     // markdown
     markdown: {
@@ -58,7 +60,13 @@ export default withPwa(
       config: (md) => markdownConfig(md, themeConfig),
     },
     // 构建排除
-    srcExclude: ["**/README.md", "**/TODO.md"],
+    srcExclude: [
+      "**/README.md",
+      "**/TODO.md",
+      "posts/2024/1010.md",
+      "posts/2024/1011.md",
+      "posts/2024/1012.md",
+    ],
     // transformHead
     transformPageData: async (pageData) => {
       // canonical URL
@@ -121,7 +129,7 @@ export default withPwa(
     // PWA
     pwa: {
       registerType: "autoUpdate",
-      selfDestroying: true,
+      selfDestroying: false,
       workbox: {
         clientsClaim: true,
         skipWaiting: true,
@@ -129,10 +137,17 @@ export default withPwa(
         // 资源缓存
         runtimeCaching: [
           {
-            urlPattern: /(.*?)\.(woff2|woff|ttf|css)/,
+            urlPattern: /\.(woff2|woff)$/i,
             handler: "CacheFirst",
             options: {
-              cacheName: "file-cache",
+              cacheName: "font-cache",
+              expiration: {
+                maxEntries: 5,
+                maxAgeSeconds: 60 * 60 * 24 * 90,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
             },
           },
           {
@@ -142,23 +157,9 @@ export default withPwa(
               cacheName: "image-cache",
             },
           },
-          {
-            urlPattern: /^https:\/\/cdn2\.codesign\.qq\.com\/.*/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "iconfont-cache",
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 2,
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
-          },
         ],
         // 缓存文件
-        globPatterns: ["**/*.{js,css,html,ico,png,jpg,jpeg,gif,svg,woff2,ttf}"],
+        globPatterns: ["**/*.{js,css,html,ico,png,jpg,jpeg,gif,svg}"],
         // 排除路径
         navigateFallbackDenylist: [/^\/sitemap.xml$/, /^\/rss.xml$/, /^\/robots.txt$/],
       },
@@ -166,6 +167,7 @@ export default withPwa(
         name: themeConfig.siteMeta.title,
         short_name: themeConfig.siteMeta.title,
         description: themeConfig.siteMeta.description,
+        lang: themeConfig.siteMeta.lang,
         display: "standalone",
         start_url: "/",
         theme_color: "#fff",

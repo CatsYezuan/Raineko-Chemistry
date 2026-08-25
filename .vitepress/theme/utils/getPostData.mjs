@@ -60,7 +60,7 @@ export const getAllPosts = async () => {
           const { birthtimeMs, mtimeMs } = stat;
           // 解析 front matter
           const { data } = matter(content);
-          const { title, date, categories, description, tags, top, cover } = data;
+          const { title, date, categories, description, tags, top, cover, hidden } = data;
           // 计算文章的过期天数
           const expired = Math.floor(
             (new Date().getTime() - new Date(date).getTime()) / (1000 * 60 * 60 * 24),
@@ -78,6 +78,7 @@ export const getAllPosts = async () => {
             regularPath: `/${item.replace(".md", ".html")}`,
             top,
             cover,
+            hidden: Boolean(hidden),
           };
         } catch (error) {
           console.error(`处理文章文件 '${item}' 时出错:`, error);
@@ -85,6 +86,8 @@ export const getAllPosts = async () => {
         }
       }),
     );
+    // 不展示仅供站点维护者保留的文章。
+    posts = posts.filter((item) => !item.hidden);
     // 根据日期排序文章
     posts.sort(comparePostPriority);
     return posts;
@@ -92,6 +95,41 @@ export const getAllPosts = async () => {
     console.error("获取所有文章时出错:", error);
     throw error;
   }
+};
+
+/** 为客户端生成轻量、可离线使用的站内搜索索引。 */
+export const getSearchIndex = async () => {
+  const paths = await globby(["**/*.md"], {
+    ignore: ["node_modules/**", ".vitepress/**", "README.md", "page/**", "**/[[]*[]].md"],
+  });
+  const entries = await Promise.all(
+    paths.map(async (filePath) => {
+      const source = await fs.readFile(filePath, "utf-8");
+      const { data, content } = matter(source);
+      if (data.hidden || data.search === false) return null;
+      const firstHeading = content.match(/^#\s+(.+)$/m)?.[1];
+      const title = data.title || firstHeading || filePath.split("/").pop().replace(/\.md$/, "");
+      const plainText = content
+        .replace(/```[\s\S]*?```/g, " ")
+        .replace(/<script[\s\S]*?<\/script>/gi, " ")
+        .replace(/<style[\s\S]*?<\/style>/gi, " ")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/!??\[([^\]]*)\]\([^)]*\)/g, "$1")
+        .replace(/[#>*_`~-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      const pathWithoutExtension = filePath.replace(/\\/g, "/").replace(/\.md$/, "");
+      const url =
+        pathWithoutExtension === "index" ? "/" : `/${pathWithoutExtension.replace(/\/index$/, "")}`;
+      return {
+        title,
+        url,
+        description: data.description || plainText.slice(0, 180),
+        keywords: [data.categories, data.tags].flat().filter(Boolean).join(" "),
+      };
+    }),
+  );
+  return entries.filter(Boolean);
 };
 
 /**

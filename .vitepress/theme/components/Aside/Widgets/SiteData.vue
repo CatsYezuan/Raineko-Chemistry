@@ -22,34 +22,26 @@
       </div>
       <div class="data-item">
         <span class="name">
-          <i class="iconfont icon-visibility"></i>
-          总访问量
+          <i class="iconfont icon-tools"></i>
+          实用工具
         </span>
-        <span class="num" id="busuanzi_value_site_pv">0</span>
+        <span class="num">1 项</span>
       </div>
       <div class="data-item">
         <span class="name">
-          <i class="iconfont icon-account"></i>
-          总访客数
+          <i class="iconfont icon-search"></i>
+          本地搜索
         </span>
-        <span class="num" id="busuanzi_value_site_uv">0</span>
+        <span class="num">已启用</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { loadScript } from "@/utils/commonTools";
 import { daysFromNow } from "@/utils/helper";
 
 const { theme } = useData();
-
-onMounted(() => {
-  loadScript("https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js", {
-    async: true,
-    reload: true,
-  });
-});
 </script>
 
 <style lang="scss" scoped>
@@ -74,16 +66,6 @@ onMounted(() => {
       .num {
         opacity: 0.8;
         font-size: 15px;
-      }
-      #busuanzi_value_site_pv {
-        &::after {
-          content: " 次";
-        }
-      }
-      #busuanzi_value_site_uv {
-        &::after {
-          content: " 人";
-        }
       }
       &:last-child {
         padding-bottom: 0;

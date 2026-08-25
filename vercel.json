@@ -4,7 +4,7 @@
   "outputDirectory": "./.vitepress/dist",
   "rewrites": [
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
-    { "source": "/feed.xml", "destination": "/feed.xml" },
+    { "source": "/rss.xml", "destination": "/rss.xml" },
     { "source": "/:path*", "destination": "/index.html" }
   ]
 }

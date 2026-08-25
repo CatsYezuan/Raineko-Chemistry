@@ -3,9 +3,18 @@
     <h1 class="title">你好，欢迎来到{{ theme.siteMeta.title }}</h1>
     <div class="subtitle">
       <Transition name="fade" mode="out-in">
-        <span :key="hitokotoData?.hitokoto" class="text">
-          {{ hitokotoData?.hitokoto ? hitokotoData?.hitokoto : theme.siteMeta.description }}
-        </span>
+        <a
+          v-if="hitokotoData"
+          :key="hitokotoData.uuid"
+          class="text hitokoto-link"
+          :href="`https://hitokoto.cn/?uuid=${hitokotoData.uuid}`"
+          target="_blank"
+          rel="noopener noreferrer"
+          :title="`来自：${hitokotoData.from || '一言'}`"
+        >
+          {{ hitokotoData.hitokoto }}
+        </a>
+        <span v-else class="text">{{ theme.siteMeta.description }}</span>
       </Transition>
     </div>
     <Transition name="fade" mode="out-in">
@@ -80,22 +89,18 @@ const props = defineProps({
 });
 
 const hitokotoData = ref(null);
-const hitokotoTimeOut = ref(null);
 
-// banner
-const bannerType = ref(null);
-
-// 获取一言数据
 const getHitokotoData = async () => {
   try {
     const result = await getHitokoto();
-    const { hitokoto, from, from_who } = result;
-    hitokotoData.value = { hitokoto, from, from_who };
+    if (result?.hitokoto) hitokotoData.value = result;
   } catch (error) {
-    $message.error("一言获取失败");
-    console.error("一言获取失败：", error);
+    console.warn("一言获取失败，已使用站点描述", error);
   }
 };
+
+// banner
+const bannerType = ref(null);
 
 // 滚动至首页
 const scrollToHome = () => {
@@ -115,17 +120,9 @@ watch(
 );
 
 onMounted(() => {
-  if (props.type === "text") {
-    hitokotoTimeOut.value = setTimeout(() => {
-      getHitokotoData();
-    }, 2000);
-  }
+  if (props.type === "text") getHitokotoData();
   // 更改 banner 类型
   bannerType.value = store.bannerType;
-});
-
-onBeforeUnmount(() => {
-  clearTimeout(hitokotoTimeOut.value);
 });
 </script>
 
