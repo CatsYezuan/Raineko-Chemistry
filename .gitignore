@@ -39,3 +39,4 @@ posts/*
 *.sw?
 
 .vercel
+.env*
